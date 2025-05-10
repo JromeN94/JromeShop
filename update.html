@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ค้นหาสินค้า</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jomhuria&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #e9d4ee;
+      font-family: 'Jomhuria', cursive;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      min-height: 100vh;
+    }
+    .top-right {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* จัดกลางแนวนอน */
+      margin-top: 20px;
+      padding-top: 100px; /* เว้นให้รูปโปรไฟล์ด้านบนไม่ทับ */
+    }
+
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+    }
+
+    .username {
+      font-weight: bold;
+      font-size: 20px;
+      color: #333;
+      font-family: 'Jomhuria';
+      margin-top: 5px;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 20px;
+      padding: 10px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: 90%;
+      max-width: 500px;
+      margin-top: 70px;
+      font-family: 'TalayDemo';
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 24px;
+      font-family: 'TalayDemo';
+      background: none;
+    }
+    button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 30px;
+      background: #fce0e4;
+      padding: 20px;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 20px;
+      font-size: 20px;
+      font-family: 'MiPancake';
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .result div {
+      display: flex;
+      justify-content: space-between;  /* ทำให้หัวข้อตรงกัน */
+      padding: 5px 0;
+    }
+    .result div strong {
+      width: 30%;  /* ทำให้แต่ละหัวข้อมีขนาดเท่ากัน */
+      text-align: left;
+    }
+    .result div span {
+      width: 65%;  /* ทำให้เนื้อหาขยายเต็มพื้นที่ */
+      text-align: left;
+      word-break: break-all;       /* บังคับตัดคำยาวๆ เช่น URL */
+      overflow-wrap: break-word;   /* ห่อคำถ้าจำเป็น */
+    }
+    .result div span a {
+      word-break: break-all;
+      overflow-wrap: break-word;
+      display: inline-block;
+    }
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #fff;
+      color: #333;
+      padding: 10px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background-color 0.3s;
+      z-index: 999;
+    }
+
+    .back-button:hover {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <!-- กล่องรวมโปรไฟล์ + ช่องค้นหา -->
+  <div class="container">
+    <!-- โปรไฟล์ -->
+    <div class="top-right">
+      <a href="https://x.com/Jrome_wind">
+        <img src="mafu.jpg" alt="Profile" class="profile-img" />
+      </a>
+      <div class="username">@Jrome_wind</div>
+    </div>
+
+    <!-- ช่องค้นหา -->
+    <div class="search-box">
+      <input type="text" id="search" placeholder="ค้นหาด้วยชื่อสินค้า" />
+      <button onclick="searchProduct()" id="button">🔍</button>
+    </div>
+  </div>
+
+  <div id="result" class="result" style="display: none;"></div>
+
+  <a href="home.html" class="back-button">🏠 กลับหน้าแรก</a>
+
+  <script>
+    const sheetAPI = 'https://script.google.com/macros/s/AKfycbybcfz_8KLy4xOyZotvZxQ6Umtpak7lhtwwYekKd0jrSQzcGcGrIQKU5uvrYqdmsLpS_Q/exec'; // แทนที่ด้วย URL ของ Web App
+
+    async function searchProduct() {
+      const q = document.getElementById('search').value;
+      const resultDiv = document.getElementById('result');
+      resultDiv.style.display = 'none';
+      resultDiv.innerHTML = '';
+
+      const res = await fetch(`${sheetAPI}?q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+
+      if (data.error) {
+        resultDiv.innerHTML = '❌ ไม่พบสินค้า';
+      } else {
+        resultDiv.innerHTML = `
+          <div> <strong>ชื่อสินค้า : </strong> <span> ${data.name} </span> </div>
+          <p></p>
+          <div><strong>Linkหลักฐาน : </strong> <span> <a href="${data.folderLink}" target="_blank">${data.folderLink}</a> </span></div>
+          <p></p>
+          <div><strong>สถานะ : </strong> <span> ${data.status} </span> </div>
+        `;
+      }
+
+      resultDiv.style.display = 'block';
+    }
+  </script>
+  
+</body>
+
+</html>
