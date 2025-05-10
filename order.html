@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>เช็คสถานะออเดอร์</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #e6ddf1;
+      font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .top-right {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* จัดกลางแนวนอน */
+      margin-top: 20px;
+      padding-top: 40px; /* เว้นให้รูปโปรไฟล์ด้านบนไม่ทับ */
+
+    }
+
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+    }
+
+    .username {
+      font-weight: bold;
+      font-size: 20px;
+      color: #333;
+      font-family: 'Jomhuria';
+      margin-top: 5px;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 20px;
+      padding: 10px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: 90%;
+      max-width: 500px;
+      margin-top: 120px;
+      font-family: 'TalayDemo';
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 24px;
+      font-family: 'TalayDemo';
+      background: none;
+    }
+    button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .spinner {
+        border: 4px solid #f3f3f3; /* สีพื้นของวงกลม */
+        border-top: 4px solid #8e44ad; /* สีของส่วนหมุน */
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .result {
+      margin-top: 40px;
+      background: #D5A4CF;
+      padding: 20px;
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      border-radius: 20px;
+      font-size: 20px;
+      font-family: 'MiPancake';
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-top: 30px;
+
+    }
+    .result div {
+      display: flex;
+      justify-content: space-between;  /* ทำให้หัวข้อตรงกัน */
+      padding: 5px 0;
+      background-color: #D5A4CF;
+      box-shadow: #B689B0;
+    }
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 6px;
+      text-align: left;
+      font-size: 16px;
+      text-align: center;
+    }
+    th {
+      background-color: #f3e5f5;
+    }
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #fff;
+      color: #333;
+      padding: 10px 16px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background-color 0.3s;
+      z-index: 999;
+    }
+
+    .back-button:hover {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+    <!-- กล่องรวมโปรไฟล์ + ช่องค้นหา -->
+    <div class="container">
+        <!-- โปรไฟล์ -->
+        <div class="top-right">
+            <a href="https://x.com/Jrome_wind">
+                <img src="mafu.jpg" alt="Profile" class="profile-img" />
+            </a>
+            <div class="username">@Jrome_wind</div>
+        </div>
+
+        <!-- ช่องค้นหา -->
+            <div class="search-box">
+                <input type="text" id="username" placeholder="ค้นหาด้วยชื่อแอค(ใส่@)" />
+                <button onclick="search()" id="button">🔍</button>
+            </div>
+
+        <!-- ช่องผลลัพธ์ -->
+            <div id="result" class="result" style="display: none;"></div>
+    </div>
+    <a href="index.html" class="back-button">🏠 กลับหน้าแรก</a>
+
+    <!-- <div class="container">
+        <h3>ค้นหาด้วยชื่อแอค (ใส่ @)</h3>
+        <input type="text" id="username" placeholder="@Jrome_wind">
+        <button onclick="search()">ค้นหา</button>
+    </div> -->
+
+  
+
+  <script>
+    async function search() {
+      const username = document.getElementById("username").value.trim();
+      if (!username.startsWith("@")) {
+        alert("กรุณาใส่ @ นำหน้าชื่อแอคเค้าท์");
+        return;
+      }
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = `
+        <p id="loading">
+            <span class="spinner"></span>
+            กำลังโหลด...
+        </p>
+        `;
+
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxU4zfxcHeZqD5Ujt8u6yP1GPqV0ZNgqozpMMfvLJgPeWNDyXkSM6O36evWrC7sRyD9/exec", {
+          method: "POST",
+          body: new URLSearchParams({ username })
+        });
+
+        const data = await response.json();
+
+        if (data.orders.length === 0) {
+          resultDiv.innerHTML = `<p>ไม่พบข้อมูลของ ${data.username}</p>`;
+          return;
+        }
+
+        let html = `<p>ชื่อลูกค้า: ${data.username}</p>`;
+        html += `<table><tr>`;
+            const keys = Object.keys(data.orders[0]).slice(1); // ตัดคีย์ตัวแรกทิ้ง
+        keys.forEach(key => html += `<th>${key}</th>`);
+        html += `</tr>`;
+        data.orders.forEach(order => {
+          html += `<tr>`;
+          keys.forEach(key => {
+            const val = order[key];
+            // ลิงก์การติดตาม ถ้าเป็น url
+            if (key === "ติดตาม" && val) {
+              html += `<td><a href="${val}" target="_blank">ติดตาม</a></td>`;
+            } else {
+              html += `<td>${val}</td>`;
+            }
+          });
+          html += `</tr>`;
+        });
+        html += `</table>`;
+
+        document.getElementById('loading').remove(); // ลบแค่ "กำลังโหลด..."
+        resultDiv.innerHTML += html; // เติมข้อมูลต่อท้าย
+
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "<p>เกิดข้อผิดพลาด</p>";
+      }
+    }
+  </script>
+</body>
+</html>

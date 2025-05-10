@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  
+  <title>Home</title>
+  <style>
+    body {
+      background-color: #e9d4ee;
+      font-family: 'Jomhuria', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      height: 100vh;
+      margin: 0;
+      padding-top: 30px;
+    }
+
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+    }
+
+    .username {
+      font-weight: bold;
+      font-size: 24px;
+      color: #333;
+      margin: 10px 0 30px;
+      font-family: 'Jomhuria';
+    }
+
+    .button-link {
+      width: 320px;
+      padding: 15px 0;
+      margin: 10px 0;
+      border-radius: 20px;
+      background-color: #f4d5e2;
+      color: #000;
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      text-decoration: none;
+      display: block;
+      transition: all 0.3s ease;
+      font-family: 'MiPancakeBold';
+      
+    }
+
+    .button-link:hover {
+      background-color: #e9bfcf;
+    }
+  </style>
+</head>
+<body>
+  <!-- คลิกรูปไปที่หน้าโปรไฟล์ -->
+  <a href="https://x.com/Jrome_wind">
+    <img src="mafu.jpg" alt="Profile" class="profile-img" />
+  </a>
+  <div class="username" font>@Jrome_wind</div>
+
+  <!-- ปุ่มลิงก์ไปหน้าต่าง ๆ -->
+  <a href="update.html" class="button-link">หลักฐานการสั่งซื้อ</a>
+  <a href="order.html" class="button-link">เช็คสถานะ & เลขแทร็ค</a>
+  <!--<a href="payment-round2.html" class="button-link">ชำระเงินรอบ2</a> -->
+</body>
+</html>
